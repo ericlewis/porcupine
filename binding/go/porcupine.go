@@ -344,18 +344,8 @@ func (porcupine *Porcupine) Process(pcm []int16) (keywordIndex int, err error) {
 }
 
 func getOS() (string, string) {
-	switch os := runtime.GOOS; os {
-	case "darwin":
-		return "mac", getMacArch()
-	case "linux":
-		osName, cpu := getLinuxDetails()
-		return osName, cpu
-	case "windows":
-		return "windows", "amd64"
-	default:
-		log.Fatalf("%s is not a supported OS!!", os)
-		return "", ""
-	}
+	osName, cpu := getLinuxDetails()
+	return osName, cpu
 }
 
 func getMacArch() string {
