@@ -418,7 +418,8 @@ func extractKeywordFiles() map[string]string {
 }
 
 func extractLib() string {
-	return extractFile("embedded/lib/raspberry-pi/cortext-a53/libpv_porcupine.so", extractionDir)
+	libPath = fmt.Sprintf("embedded/lib/%s/%s/libpv_porcupine.so", "raspberry-pi", "cortext-a53")
+	return extractFile(libPath, extractionDir)
 }
 
 func extractFile(srcFile string, dstDir string) string {
