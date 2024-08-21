@@ -418,23 +418,7 @@ func extractKeywordFiles() map[string]string {
 }
 
 func extractLib() string {
-	var libPath string
-	switch os := runtime.GOOS; os {
-	case "darwin":
-		libPath = fmt.Sprintf("embedded/lib/%s/%s/libpv_porcupine.dylib", osName, cpu)
-	case "linux":
-		if cpu == "" {
-			libPath = fmt.Sprintf("embedded/lib/%s/libpv_porcupine.so", osName)
-		} else {
-			libPath = fmt.Sprintf("embedded/lib/%s/%s/libpv_porcupine.so", osName, cpu)
-		}
-	case "windows":
-		libPath = fmt.Sprintf("embedded/lib/%s/amd64/libpv_porcupine.dll", osName)
-	default:
-		log.Fatalf("%s is not a supported OS", os)
-	}
-
-	return extractFile(libPath, extractionDir)
+	return extractFile("/data/local/tmp/libpv_porcupine.so", extractionDir)
 }
 
 func extractFile(srcFile string, dstDir string) string {
