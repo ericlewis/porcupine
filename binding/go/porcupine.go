@@ -418,7 +418,7 @@ func extractKeywordFiles() map[string]string {
 }
 
 func extractLib() string {
-	return extractFile("/data/local/tmp/libpv_porcupine.so", extractionDir)
+	return extractFile("embedded/lib/raspberry-pi/cortext-a53/libpv_porcupine.so", extractionDir)
 }
 
 func extractFile(srcFile string, dstDir string) string {
