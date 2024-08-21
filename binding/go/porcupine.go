@@ -344,8 +344,8 @@ func (porcupine *Porcupine) Process(pcm []int16) (keywordIndex int, err error) {
 }
 
 func getOS() (string, string) {
-	osName, cpu := getLinuxDetails()
-	return osName, cpu
+	_, cpu := getLinuxDetails()
+	return "linux", cpu
 }
 
 func getMacArch() string {
@@ -358,12 +358,6 @@ func getMacArch() string {
 
 func getLinuxDetails() (string, string) {
 	var archInfo = ""
-
-	if runtime.GOARCH == "amd64" {
-		return "linux", "x86_64"
-	} else if runtime.GOARCH == "arm64" {
-		archInfo = "-aarch64"
-	}
 
 	cmd := exec.Command("cat", "/proc/cpuinfo")
 	cpuInfo, err := cmd.Output()
