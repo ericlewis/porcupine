@@ -353,7 +353,7 @@ func getOS() (string, string) {
 	case "windows":
 		return "windows", "amd64"
 	default:
-		log.Fatalf("%s is not a supported OS", os)
+		log.Fatalf("%s is not a supported OS!", os)
 		return "", ""
 	}
 }
