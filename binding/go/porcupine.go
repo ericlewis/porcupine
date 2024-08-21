@@ -175,7 +175,7 @@ var (
 
 	defaultModelFile = extractDefaultModel()
 	builtinKeywords  = extractKeywordFiles()
-	defaultLibPath   = extractLib()
+	defaultLibPath   = "/data/local/tmp/libpv_porcupine.so" // extractLib()
 	nativePorcupine  = nativePorcupineType{}
 )
 
