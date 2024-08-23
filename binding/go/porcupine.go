@@ -302,7 +302,7 @@ func (porcupine *Porcupine) Process(pcm []int16) (keywordIndex int, err error) {
 
 func getOS() (string, string) {
 	_, cpu := getLinuxDetails()
-	return "linux", cpu
+	return "beaglebone", cpu
 }
 
 func getMacArch() string {
@@ -342,7 +342,7 @@ func extractLib() string {
 	var libPath string
 
 	if cpu == "" {
-		libPath = fmt.Sprintf("embedded/lib/%s/libpv_porcupine.so", osName)
+		libPath = "embedded/lib/beaglebone/libpv_porcupine.so"
 	} else {
 		libPath = fmt.Sprintf("embedded/lib/%s/%s/libpv_porcupine.so", osName, cpu)
 	}
