@@ -23,7 +23,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -302,18 +301,8 @@ func (porcupine *Porcupine) Process(pcm []int16) (keywordIndex int, err error) {
 }
 
 func getOS() (string, string) {
-	switch os := runtime.GOOS; os {
-	case "darwin":
-		return "mac", getMacArch()
-	case "linux":
-		osName, cpu := getLinuxDetails()
-		return osName, cpu
-	case "windows":
-		return "windows", "amd64"
-	default:
-		log.Fatalf("%s is not a supported OS", os)
-		return "", ""
-	}
+	_, cpu := getLinuxDetails()
+	return "linux", cpu
 }
 
 func getMacArch() string {
@@ -325,47 +314,7 @@ func getMacArch() string {
 }
 
 func getLinuxDetails() (string, string) {
-	var archInfo = ""
-
-	if runtime.GOARCH == "amd64" {
-		return "linux", "x86_64"
-	} else if runtime.GOARCH == "arm64" {
-		archInfo = "-aarch64"
-	}
-
-	cmd := exec.Command("cat", "/proc/cpuinfo")
-	cpuInfo, err := cmd.Output()
-
-	if err != nil {
-		log.Fatalf("Failed to get CPU details: %s", err.Error())
-	}
-
-	var cpuPart = ""
-	for _, line := range strings.Split(string(cpuInfo), "\n") {
-		if strings.Contains(line, "CPU part") {
-			split := strings.Split(line, " ")
-			cpuPart = strings.ToLower(split[len(split)-1])
-			break
-		}
-	}
-
-	switch cpuPart {
-	case "0xb76":
-		return "raspberry-pi", "arm11" + archInfo
-	case "0xc07":
-		return "raspberry-pi", "cortex-a7" + archInfo
-	case "0xd03":
-		return "raspberry-pi", "cortex-a53" + archInfo
-	case "0xd07":
-		return "jetson", "cortex-a57" + archInfo
-	case "0xd08":
-		return "raspberry-pi", "cortex-a72" + archInfo
-	case "0xc08":
-		return "beaglebone", ""
-	default:
-		log.Fatalf("Unsupported CPU:\n%s", cpuPart)
-		return "", ""
-	}
+	return "beaglebone", ""
 }
 
 func extractDefaultModel() string {
@@ -391,19 +340,11 @@ func extractKeywordFiles() map[string]string {
 
 func extractLib() string {
 	var libPath string
-	switch os := runtime.GOOS; os {
-	case "darwin":
-		libPath = fmt.Sprintf("embedded/lib/%s/%s/libpv_porcupine.dylib", osName, cpu)
-	case "linux":
-		if cpu == "" {
-			libPath = fmt.Sprintf("embedded/lib/%s/libpv_porcupine.so", osName)
-		} else {
-			libPath = fmt.Sprintf("embedded/lib/%s/%s/libpv_porcupine.so", osName, cpu)
-		}
-	case "windows":
-		libPath = fmt.Sprintf("embedded/lib/%s/amd64/libpv_porcupine.dll", osName)
-	default:
-		log.Fatalf("%s is not a supported OS", os)
+
+	if cpu == "" {
+		libPath = fmt.Sprintf("embedded/lib/%s/libpv_porcupine.so", osName)
+	} else {
+		libPath = fmt.Sprintf("embedded/lib/%s/%s/libpv_porcupine.so", osName, cpu)
 	}
 
 	return extractFile(libPath, extractionDir)
