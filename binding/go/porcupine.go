@@ -357,43 +357,7 @@ func getMacArch() string {
 }
 
 func getLinuxDetails() (string, string) {
-	var archInfo = ""
-
-	cmd := exec.Command("cat", "/proc/cpuinfo")
-	cpuInfo, err := cmd.Output()
-
-	if err != nil {
-		log.Fatalf("Failed to get CPU details: %s", err.Error())
-	}
-
-	var cpuPart = ""
-	for _, line := range strings.Split(string(cpuInfo), "\n") {
-		if strings.Contains(line, "CPU part") {
-			split := strings.Split(line, " ")
-			cpuPart = strings.ToLower(split[len(split)-1])
-			break
-		}
-	}
-
-	switch cpuPart {
-	case "0xb76":
-		return "raspberry-pi", "arm11" + archInfo
-	case "0xc07":
-		return "raspberry-pi", "cortex-a7" + archInfo
-	case "0xd03":
-		return "raspberry-pi", "cortex-a53" + archInfo
-	case "0xd07":
-		return "jetson", "cortex-a57" + archInfo
-	case "0xd08":
-		return "raspberry-pi", "cortex-a72" + archInfo
-	case "0xd0b":
-		return "raspberry-pi", "cortex-a76" + archInfo
-	case "0xc08":
-		return "beaglebone", ""
-	default:
-		log.Fatalf("Unsupported CPU:\n%s", cpuPart)
-		return "", ""
-	}
+	return "beaglebone", ""
 }
 
 func extractDefaultModel() string {
